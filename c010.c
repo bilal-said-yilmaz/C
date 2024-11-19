@@ -78,17 +78,22 @@ int delete(int data ){
     return 0;
 }
 
-// Liste elemanlarını alt alta yazdıran fonksiyon
+// Liste elemanlarını yan yana yazdıran fonksiyon
 int printlist(){
     struct node *start=head;
     while (start!=NULL){
-        printf("%3d\n",start->data);
+        if (start->next!=NULL){
+        printf("%3d - ",start->data);
         start=start->next;
+        }
+        else if (start->next==NULL){
+        printf("%3d",start->data);
+        start=start->next;
+        }
     }
     printf("\n");
     return 0;
 }
-
 int main(){
     addnode(89);
     printlist();
