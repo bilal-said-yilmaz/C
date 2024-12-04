@@ -8,7 +8,6 @@ typedef struct Node {
     struct Node* prev;
 } Node;
 
-
 typedef struct {
     Node* front;
     Node* rear;
@@ -43,25 +42,22 @@ int dequeueFront(Queue* q, int* index) {
     Node* temp = q->front;
     int value = temp->value;
     *index = temp->index;
-
+    
     q->front = q->front->next;
     if (q->front == NULL) {
         q->rear = NULL;
     } else {
         q->front->prev = NULL;
     }
-
     free(temp);
     return value;
 }
 
 int dequeueRear(Queue* q, int* index) {
     if (q->rear == NULL) return -1; 
-
     Node* temp = q->rear;
     int value = temp->value;
     *index = temp->index;
-
     q->rear = q->rear->prev;
     if (q->rear == NULL) { 
         q->front = NULL;
