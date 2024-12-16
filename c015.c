@@ -63,6 +63,48 @@ int search(node *tree, int sought){
     return -1;
 }
 
+// MIN MAX
+int maxNode(node *tree){
+    node *iter=tree;
+    while (iter->right!=NULL) {
+        iter = iter->right;
+    }
+    return iter->data;
+}
+int minNode(node *tree){
+    node *iter=tree;
+    while(iter->left!=NULL){
+        iter=iter->left;
+    }
+    return iter->data;
+}
+
+// DELETE
+
+node *delete(node *tree, int deleted){
+    if (tree==NULL)
+        return NULL;
+    if (deleted< tree->data){
+        tree->left= delete(tree->left,deleted);
+    }else if (deleted > tree->data){
+        tree->right= delete(tree->right,deleted);
+    }else{
+
+        if (tree->left == NULL && tree->right == NULL) {
+                return NULL;
+        }else if (tree->right != NULL) {
+            int minValue=minNode(tree->right);
+            tree->data = minValue;
+            tree->right = delete(tree->right, minNode(tree->right));
+            return tree;
+        } else {
+            int maxValue= maxNode(tree->left);
+            tree->data = maxValue;
+            tree->left = delete(tree->left, maxValue);
+        }
+    }
+    return tree;
+}
 int main(){
     node *tree =NULL;
     tree=addNode(tree,14);
@@ -74,5 +116,13 @@ int main(){
     traverseRNL(tree);
     printf("Searching for value 7:%d\n", search(tree,7));
     printf("Searching for value 123:%d\n", search(tree,123));
+    printf("Max Node :%d \n", maxNode(tree));
+    printf("Min Node :%d \n", minNode(tree));
+    printf("The value to be deleted is 7\n");
+    tree=delete(tree,7);
+    traverseLNR(tree);
+    printf("The value to be deleted is 77\n");
+    tree=delete(tree,77);
+    traverseLNR(tree);
     return 0;
 }
