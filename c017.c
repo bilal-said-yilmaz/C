@@ -1,33 +1,22 @@
-/** C implementation for 
-	Red-Black Tree Insertion
-	This code is provided by 
-	costheta_z **/
 #include <stdio.h>
 #include <stdlib.h>
 
-// Structure to represent each 
-// node in a red-black tree
 struct node {
-	int d; // data
-	int c; // 1-red, 0-black
-	struct node* p; // parent
-	struct node* r; // right-child
-	struct node* l; // left child
+	int d; 
+	int c; 
+	struct node* p; 
+	struct node* r; 
+	struct node* l; 
 };
 
-// global root for the entire tree
 struct node* root = NULL;
 
-// function to perform BST insertion of a node
 struct node* bst(struct node* trav, 
 					struct node* temp)
 {
-	// If the tree is empty, 
-	// return a new node
 	if (trav == NULL)
 		return temp;
 
-	// Otherwise recur down the tree
 	if (temp->d < trav->d) 
 	{
 		trav->l = bst(trav->l, temp);
@@ -39,12 +28,9 @@ struct node* bst(struct node* trav,
 		trav->r->p = trav;
 	}
 
-	// Return the (unchanged) node pointer
 	return trav;
 }
 
-// Function performing right rotation 
-// of the passed node
 void rightrotate(struct node* temp)
 {
 	struct node* left = temp->l;
@@ -62,8 +48,6 @@ void rightrotate(struct node* temp)
 	temp->p = left;
 }
 
-// Function performing left rotation 
-// of the passed node
 void leftrotate(struct node* temp)
 {
 	struct node* right = temp->r;
@@ -81,8 +65,6 @@ void leftrotate(struct node* temp)
 	temp->p = right;
 }
 
-// This function fixes violations 
-// caused by BST insertion
 void fixup(struct node* root, struct node* pt)
 {
 	struct node* parent_pt = NULL;
@@ -94,18 +76,11 @@ void fixup(struct node* root, struct node* pt)
 		parent_pt = pt->p;
 		grand_parent_pt = pt->p->p;
 
-		/* Case : A
-			Parent of pt is left child 
-			of Grand-parent of
-		pt */
 		if (parent_pt == grand_parent_pt->l) 
 		{
 
 			struct node* uncle_pt = grand_parent_pt->r;
 
-			/* Case : 1
-				The uncle of pt is also red
-				Only Recoloring required */
 			if (uncle_pt != NULL && uncle_pt->c == 1) 
 			{
 				grand_parent_pt->c = 1;
@@ -116,18 +91,12 @@ void fixup(struct node* root, struct node* pt)
 
 			else {
 
-				/* Case : 2
-					pt is right child of its parent
-					Left-rotation required */
 				if (pt == parent_pt->r) {
 					leftrotate(parent_pt);
 					pt = parent_pt;
 					parent_pt = pt->p;
 				}
 
-				/* Case : 3
-					pt is left child of its parent
-					Right-rotation required */
 				rightrotate(grand_parent_pt);
 				int t = parent_pt->c;
 				parent_pt->c = grand_parent_pt->c;
@@ -136,16 +105,8 @@ void fixup(struct node* root, struct node* pt)
 			}
 		}
 
-		/* Case : B
-			Parent of pt is right 
-			child of Grand-parent of
-		pt */
 		else {
 			struct node* uncle_pt = grand_parent_pt->l;
-
-			/* Case : 1
-				The uncle of pt is also red
-				Only Recoloring required */
 			if ((uncle_pt != NULL) && (uncle_pt->c == 1)) 
 			{
 				grand_parent_pt->c = 1;
@@ -154,18 +115,12 @@ void fixup(struct node* root, struct node* pt)
 				pt = grand_parent_pt;
 			}
 			else {
-				/* Case : 2
-				pt is left child of its parent
-				Right-rotation required */
 				if (pt == parent_pt->l) {
 					rightrotate(parent_pt);
 					pt = parent_pt;
 					parent_pt = pt->p;
 				}
 
-				/* Case : 3
-					pt is right child of its parent
-					Left-rotation required */
 				leftrotate(grand_parent_pt);
 				int t = parent_pt->c;
 				parent_pt->c = grand_parent_pt->c;
@@ -176,8 +131,6 @@ void fixup(struct node* root, struct node* pt)
 	}
 }
 
-// Function to print inorder traversal 
-// of the fixated tree
 void inorder(struct node* trav)
 {
 	if (trav == NULL)
@@ -187,7 +140,6 @@ void inorder(struct node* trav)
 	inorder(trav->r);
 }
 
-// driver code
 int main()
 {
 	int n = 7;
@@ -195,10 +147,6 @@ int main()
 
 	for (int i = 0; i < n; i++) {
 
-		// allocating memory to the node and initializing:
-		// 1. color as red
-		// 2. parent, left and right pointers as NULL
-		// 3. data as i-th value in the array
 		struct node* temp
 			= (struct node*)malloc(sizeof(struct node));
 		temp->r = NULL;
@@ -207,12 +155,8 @@ int main()
 		temp->d = a[i];
 		temp->c = 1;
 
-		// calling function that performs bst insertion of
-		// this newly created node
 		root = bst(root, temp);
 
-		// calling function to preserve properties of rb
-		// tree
 		fixup(root, temp);
 		root->c = 0;
 	}
